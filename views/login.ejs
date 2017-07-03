@@ -1,0 +1,11 @@
+<h2> Login Page </h2>
+<% if (typeof error === 'object') { %>
+       <p> <%= error %> </p>
+<% }; %>
+  <form class="form" method="post" action="/login">
+    <input id="login-user-name" type="text" name="loginUsername" placeholder="Enter Username">
+    <br>
+    <input id="login-password" type="password" name="loginPassword" placeholder="Enter Password">
+    <br>
+    <button> Submit </button>
+  </form>

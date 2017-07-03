@@ -1,0 +1,19 @@
+<h2> Profile Page </h2>
+<a href="/new-car">Add Vehicle</a>
+<ul>
+  <h3> My Cars </h3>
+<%  if(currentUser.cars.length > 0) { %>
+<% currentUser.cars.forEach((oneCar) => { %>
+   <li>
+      <%= oneCar.make %>
+    <%= oneCar.model %>
+    <%= oneCar.year %>
+   <%= oneCar.mpg %>
+    <%= oneCar.desc %>
+    <form method="post" action="/<%=oneCar._id%>/delete">
+       <button> Delete </button>
+    </form>
+    <% })}; %>
+    </li>
+
+</ul>

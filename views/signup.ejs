@@ -1,0 +1,13 @@
+<h2> Sign Up Page </h2>
+<% if (typeof error === 'object') { %>
+       <p> <%= error %> </p>
+<% }; %>
+  <form class="form" method="post" action="/signup">
+    <input id="full-name" type="text" name="fullName" placeholder="Enter Name">
+    <br>
+    <input id="user-name" type="text" name="userName" placeholder="Enter Username">
+    <br>
+    <input id="password" type="password" name="password" placeholder="Enter Password">
+    <br>
+    <button> Submit </button>
+  </form>

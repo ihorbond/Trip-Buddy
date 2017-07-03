@@ -1,0 +1,17 @@
+<h2> New Trip </h2>
+
+<input id="avoid-tolls" type="checkbox" name="avoidTolls" value="Tolls?">
+<label for="avoid-tolls"> Avoid tolls? </label>
+<br>
+<input type="text" id="origin-input" name="originInput" placeholder="From">
+<input type="text" id="destination-input" name="destinationInput" placeholder="To">
+<input type="number" id="mpg" name="mpg" value="25" placeholder="Car MPG">
+<img  id="help" src="./images/question-mark.png" alt="help">
+
+<!-- <button id="calculate"> Calculate </button> -->
+<div id="map"></div>
+<div id="results"></div>
+<script>
+  let googleMapsKey = '<%= googleMapsKey %>';
+</script>
+<script type='text/javascript' src="/javascripts/front.js"></script>

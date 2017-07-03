@@ -1,2 +1,2 @@
 # trip-buddy
-trip-buddy lets you calculate expenses for your next trip
+Trip Buddy is a website that helps you calculate your next trip expenses 
