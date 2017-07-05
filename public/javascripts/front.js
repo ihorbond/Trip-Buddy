@@ -6,6 +6,78 @@ let destinationPlaceId = null;
 mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${mapKey}&libraries=places&callback=startMap`;
 document.body.appendChild(mapScript);
 
+// $.getJSON('http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/&callback=?', data => {
+// 	scrapedData = data.contents;
+//   let begin   = scrapedData.indexOf('<table>');
+//   let end     = scrapedData.indexOf('<div class="row-sm">');
+//   let result  = scrapedData.slice(begin, end);
+//   console.log(result);
+//   $('#gas-prices').append(result);
+// });
+const gasPrices = `<table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Regular</th>
+                    <th>Mid-Grade</th>
+                    <th>Premium</th>
+                    <th>Diesel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Current Avg.</td>
+                    <td>$2.232</td>
+                    <td>$2.535</td>
+                    <td>$2.783</td>
+                    <td>$2.441</td>
+                </tr>
+                <tr>
+                    <td>Yesterday Avg.</td>
+                    <td>$2.234</td>
+                    <td>$2.540</td>
+                    <td>$2.786</td>
+                    <td>$2.441</td>
+                </tr>
+                <tr>
+                    <td>Week Ago Avg.</td>
+                    <td>$2.254</td>
+                    <td>$2.558</td>
+                    <td>$2.805</td>
+                    <td>$2.449</td>
+                </tr>
+                <tr>
+                    <td>Month Ago Avg.</td>
+                    <td>$2.376</td>
+                    <td>$2.657</td>
+                    <td>$2.900</td>
+                    <td>$2.511</td>
+                </tr>
+                <tr>
+                    <td>Year Ago Avg.</td>
+                    <td>$2.272</td>
+                    <td>$2.538</td>
+                    <td>$2.774</td>
+                    <td>$2.372</td>
+                </tr>
+            </tbody>
+        </table>
+        `;
+
+$('#gas-prices').append(gasPrices);
+
+// scrapeResults();
+// $.ajax({
+//   url: "http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/",
+//   dataType: "jsonp", //jsonP only since json runs into CORS bomb
+//   callback: "scrapeResults"
+// });
+
+
+
+// $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://gasprices.aaa.com/') + '&callback=?', data => {
+// 	console.log(data.contents);
+// });
 // var obj = {
 //   "originAddresses": [ "Greenwich, Greater London, UK", "13 Great Carleton Square, Edinburgh, City of Edinburgh EH16 4, UK" ],
 //   "destinationAddresses": [ "Stockholm County, Sweden", "Dlouhá 609/2, 110 00 Praha-Staré Město, Česká republika" ],
@@ -68,7 +140,7 @@ function startMap() {
       const marker = new google.maps.Marker({
         position: myLocation,
         map: map,
-        title: 'my location'
+        title: 'You are here'
       });
 
     }, () => {
@@ -103,12 +175,11 @@ class AutocompleteDirectionsHandler {
     this.travelMode         = 'DRIVING';
     this.avoidTolls         = false;
     this.unitSystem         = google.maps.UnitSystem.IMPERIAL;
-    this.gasPrice           = 2.50;
-    this.mpg                = parseInt(document.getElementById('mpg').value);
+    this.gasPrice           = 2.20;
     this.directionsService  = new google.maps.DirectionsService();
     this.directionsDisplay  = new google.maps.DirectionsRenderer();
     this.directionsDisplay.setMap(map);
-    this.distanceResponse       = null;
+    this.distanceMatrixResponse = null;
     this.originInput            = document.getElementById('origin-input');
     this.destinationInput       = document.getElementById('destination-input');
     let originAutocomplete      = new google.maps.places.Autocomplete( this.originInput, { placeIdOnly: true });
@@ -119,21 +190,25 @@ class AutocompleteDirectionsHandler {
 
   }
 
-
   calculateExpensesAndDisplayResults() {
-     const distance   = parseInt(his.distanceResponse.rows[0].elements[0].distance.text);
-     const travelTime = this.distanceResponse.rows[0].elements[0].duration.text;
-     const amountOfGas= distance/this.mpg;
-     const cost       = (amountOfGas * this.gasPrice).toFixed(2);
-     $('#results').text(`Distance: ${distance}(${distance*1.6}km) | Travel Time: ${travelTime} | Cost of this trip: $${cost}
-                        Gas Needed: ${amountOfGas}Gal (${amountOfGas*3.78}L)`);
-
+     const mpg           = parseInt(document.getElementById('mpg').value, 10);
+     const distance      = parseFloat(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
+     const travelTime    = this.distanceMatrixResponse.rows[0].elements[0].duration.text;
+     const amountOfGas   = (distance / mpg).toFixed(2);
+     const cost          = (amountOfGas * this.gasPrice).toFixed(2);
+     $('#results-text').html(`<ul>
+                            <li>Traveling from: <span class="result-values">${this.originInput.value}</span> </li>
+                            <li>To: <span class="result-values">${this.destinationInput.value}</span></li>
+                            <li>Distance: <span class="result-values">${distance}mi (${(distance*1.6).toFixed(2)}km)</span></li>
+                            <li>Travel Time: <span class="result-values">${travelTime}</span></li>
+                            <li>Gas Needed: <span class="result-values">${amountOfGas}Gal (${(amountOfGas*3.78).toFixed(2)}L)</span></li>
+                            <hr>
+                            <li> Cost of this trip: <b>$${cost}</b> </li>
+                         <ul>`);
   }
 
   getDistance() {
     const me          = this;
-    // const origin      = document.getElementById('origin-input').value;
-    // const destination = document.getElementById('destination-input').value;
     const service     = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix(
     {
@@ -144,7 +219,7 @@ class AutocompleteDirectionsHandler {
       avoidTolls:    this.avoidTolls
     }, (response, status) => {
       if (status === "OK") {
-        me.distanceResponse = response;
+        me.distanceMatrixResponse = response;
         me.calculateExpensesAndDisplayResults();
       }
       else {
@@ -176,8 +251,6 @@ class AutocompleteDirectionsHandler {
   route() {
     const me = this;
     if (!this.originPlaceId || !this.destinationPlaceId) return;
-    //  console.log(this.originPlaceId);
-    //  console.log(typeof this.originPlaceId);
     this.getDistance();
     this.directionsService.route({
       origin:      { 'placeId': this.originPlaceId },

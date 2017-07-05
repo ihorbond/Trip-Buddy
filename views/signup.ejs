@@ -1,13 +1,24 @@
-<h2> Sign Up Page </h2>
+<div class="container login-signup bg-primary">
+<h2> Create account </h2>
 <% if (typeof error === 'object') { %>
        <p> <%= error %> </p>
 <% }; %>
   <form class="form" method="post" action="/signup">
-    <input id="full-name" type="text" name="fullName" placeholder="Enter Name">
+    <input class="form-control" id="full-name" type="text" name="fullName" placeholder="Enter Name">
     <br>
-    <input id="user-name" type="text" name="userName" placeholder="Enter Username">
+    <input class="form-control" id="user-name" type="text" name="userName" placeholder="Enter Username">
     <br>
-    <input id="password" type="password" name="password" placeholder="Enter Password">
+    <input class="form-control" id="password" type="password" name="password" placeholder="Enter Password">
     <br>
-    <button> Submit </button>
+    <label for="security-questions">Select security question</label>
+    <select id="security-questions" class="security-questions">
+    <option> City you were born </option>
+    <option> Favorite movie </option>
+      <option> Mother's maiden name </option>
+  </select>
+    <br> <br>
+    <input class="form-control" id="security-question-answer" type="text" name="securityQuestionAnswer" placeholder="Answer">
+    <br>
+    <button class="btn btn-info"> Register </button>
   </form>
+</div>

@@ -1,11 +1,17 @@
-<h2> Login Page </h2>
+
+
+<div class="container login-signup bg-primary">
+  <h2> Login </h2>
 <% if (typeof error === 'object') { %>
-       <p> <%= error %> </p>
+       <p class="error"> <%= error %> </p>
 <% }; %>
-  <form class="form" method="post" action="/login">
-    <input id="login-user-name" type="text" name="loginUsername" placeholder="Enter Username">
+  <form method="post" action="/login">
+    <input class="form-control" id="login-user-name" type="text" name="loginUsername" placeholder="Enter Username">
     <br>
-    <input id="login-password" type="password" name="loginPassword" placeholder="Enter Password">
+    <input class="form-control" id="login-password" type="password" name="loginPassword" placeholder="Enter Password">
     <br>
-    <button> Submit </button>
+    <button class="btn btn-info"> Login </button>
   </form>
+     <button class="btn btn-info"> Facebook </button>
+     <button class="btn btn-info"> Google+ </button>
+</div>
