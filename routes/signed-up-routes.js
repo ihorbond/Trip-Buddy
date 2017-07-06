@@ -4,6 +4,23 @@ const CarModel  = require('../models/car-model.js');
 const UserModel = require('../models/user-model.js');
 
 
+router.get('/new-trip', (req, res, next) => {
+if (req.user) {
+    UserModel.findById(
+      req.user_.id,
+      (err, userFromDb) => {
+        if (err) return void next (err);
+        res.locals.cars = userFromDb.cars;
+        res.render('new-trip-view.ejs');
+      }
+    );
+}
+else {
+    res.render('new-trip-view.ejs');
+}
+
+});
+
 router.get('/new-car', (req, res, next) => {
   res.render('new-car-view.ejs');
 });
@@ -53,7 +70,7 @@ router.post('/:carId/delete', (req, res, next) => {
         //why oneCar and carToRemoveId are different types ???
         if (oneCar._id.toString() === carToRemoveId.toString()) {
           // console.log('-----------IF STATEMENT TRIGGERED');
-          userFromDb.cars.splice(index, 1); 
+          userFromDb.cars.splice(index, 1);
         }
         // console.log("----------CARS ARRAY: " + userFromDb.cars);
       });

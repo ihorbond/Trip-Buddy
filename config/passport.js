@@ -43,3 +43,82 @@ passport.use(new LocalStrategy(
 ));
 
 //------------FACEBOOK LOGIN STRATEGY----------------
+const FbStrategy = require('passport-facebook').Strategy;
+passport.use(new FbStrategy(
+     {
+       clientID:     process.env.facebookClientID,
+       clientSecret: process.env.facebookClientSecret,
+       callbackURL:  '/auth/facebook/callback' //whatever URL you want
+     },
+     (accessToken, refreshToken, profile, next) => {
+       console.log("FACEBOOK PROFILE INFO");
+       console.log(profile);
+        UserModel.findOne(
+          {facebookId: profile.id},
+          (err, userFromDb) => {
+            if (err) {
+              next(err);
+              return;
+            }
+            if(userFromDb) {          //if user found means he already logged in with facebook before
+              next(null, userFromDb);
+              return;
+            }
+            //if this is the first time users logs in with facebook -> SAVE them in out DB
+            const theUser = new UserModel ({
+              fullName: profile.displayName,
+              facebookId: profile.id
+            });
+            theUser.save((err) => {
+              if (err) {
+                next(err);
+                return;
+              }
+              next(null, theUser);
+            });
+          });
+     }
+));
+
+//GOOGLE login strategy
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+passport.use(new GoogleStrategy(
+     {
+       clientID:     process.env.googleClientID,
+       clientSecret: process.env.googleClientSecret,
+       callbackURL:  '/auth/google/callback' //whatever URL you want
+     },
+     (accessToken, refreshToken, profile, next) => {
+       console.log("GOOGLE PROFILE INFO");
+       console.log(profile);
+        UserModel.findOne(
+          {googleId: profile.id},
+          (err, userFromDb) => {
+            if (err) {
+              next(err);
+              return;
+            }
+            if(userFromDb) {          //if user found means he already logged in with facebook before
+              next(null, userFromDb);
+              return;
+            }
+            //if this is the first time users logs in with facebook -> SAVE them in out DB
+            const theUser = new UserModel ({
+              fullName: profile.displayName,
+              googleId: profile.id
+            });
+
+            if(theUser.fullName === undefined) {
+             theUser.fullName = profile.emails[0].value;
+          }
+
+            theUser.save((err) => {
+              if (err) {
+                next(err);
+                return;
+              }
+              next(null, theUser);
+            });
+          });
+     }
+));

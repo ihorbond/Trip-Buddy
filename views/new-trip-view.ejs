@@ -1,39 +1,49 @@
-
-
-<h2> New Trip </h2>
-<div class="container border">
+<div class="container new-trip-view">
   <div class="row">
-<div id="inputs" class="col-md-6 bg-primary">
-  <div id="gas-prices"></div>
-  <span id="AAA">*Gas data provided by <a href="http://gasprices.aaa.com/"> AAA.</a> Valid for the U.S market only</span>
-  <ul>
 
-  <li>
-     <label for="origin-input">Enter Origin</label>
-    <input type="text" class="form-control" id="origin-input" name="originInput" placeholder="e.g. Chicago"></li>
-  <li>
-    <label for="destination-input">Enter Destination</label>
-    <input type="text" class="form-control" id="destination-input" name="destinationInput" placeholder="e.g. Miami"></li>
-  <li>
-    <label for="mpg">Enter MPG</label>
-      <img id="help" src="./images/question-mark.png" alt="help">
-    <input type="number" class="form-control" id="mpg" name="mpg" value="25"></li>
-  <li>
-     <label for="gas-price-input">Enter Gas Price</label>
-    <input type="number" class="form-control" id="gas-price-input" name="gasPriceInput" value="2.20"></li>
-  <li><input id="avoid-tolls" type="checkbox" name="avoidTolls" value="Tolls?">
-  <label for="avoid-tolls"> Avoid tolls? </label>
-  <br> </li>
-</ul>
-</div>
-<div id="results" class="col-md-6 bg-primary">
-<h2> Results </h2>
-<div id="results-text"></div>
-</div>
-</div>
-<div class="row">
-<div id="map"></div>
-</div>
+    <span id="new-trip-text"> New Trip </span>
+
+    <div id="inputs" class="col-md-6 bg-primary">
+      <div id="gas-prices"></div>
+      <span id="AAA">*Gas data provided by <a href="http://gasprices.aaa.com/"> AAA.</a> Valid for the U.S market only</span>
+      <ul>
+
+        <li>
+          <label for="origin-input">Enter Origin</label>
+          <input type="text" class="form-control" id="origin-input" name="originInput" placeholder="Where are you ?"></li>
+        <li>
+          <label for="destination-input">Enter Destination</label>
+          <input type="text" class="form-control" id="destination-input" name="destinationInput" placeholder="Where are you headed ?"></li>
+        <li>
+          <% if(typeof currentUser === 'object') { %>
+            <select class="secutiry-questions">
+       <% cars.forEach(oneCar => { %>
+          <option> <%= oneCar %> </option>
+       <% });} %>
+      </select>
+            <label for="mpg">Enter <abbr title="Miles Per Gallon" class="initialism">MPG</abbr></label>
+            <input type="number" class="form-control" id="mpg" name="mpg" value="29"></li>
+        <li>
+          <label for="gas-price-input">Enter Gas Price</label>
+          <input type="text" class="form-control" id="gas-price-input" name="gasPriceInput" value="2.20"></li>
+        <li><input id="avoid-tolls" type="checkbox" name="avoidTolls" value="Tolls?">
+          <label for="avoid-tolls"> Avoid tolls? </label>
+        </li>
+        <li> <button id="calculate" class="btn btn-info"> Calculate </button> </li>
+
+      </ul>
+    </div>
+
+    <div id="results" class="col-md-6 bg-primary">
+      <h2> Results </h2>
+      <div id="results-text"></div>
+      <!-- currency converter vidget -->
+      <div id='gcw_mainFiAdg9Fr1' class='gcw_mainFiAdg9Fr1'></div>
+    </div>
+  </div>
+  <div class="row">
+    <div id="map"></div>
+  </div>
 </div>
 <script>
   let googleMapsKey = '<%= googleMapsKey %>';

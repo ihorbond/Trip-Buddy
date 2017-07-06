@@ -1,10 +1,29 @@
 const mapKey = googleMapsKey;  //insert your key here
 const mapScript = document.createElement('script');
 let map;
-let originPlaceId = null;
-let destinationPlaceId = null;
+let mapHandler;
 mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${mapKey}&libraries=places&callback=startMap`;
 document.body.appendChild(mapScript);
+
+document.getElementById('calculate').onclick = () => {
+  mapHandler.route();
+  reloadFiAdg9Fr1();
+};
+
+//currency converter widget
+function reloadFiAdg9Fr1() {
+  var sc = document.getElementById('scFiAdg9Fr1');
+  if (sc) sc.parentNode.removeChild(sc);
+  sc = document.createElement('script');
+  sc.type = 'text/javascript';
+  sc.charset = 'UTF-8';
+  sc.async = true;
+  sc.id = 'scFiAdg9Fr1';
+  sc.src =
+    'https://freecurrencyrates.com/en/widget-horizontal-editable?iso=USDGBPEURUAH&df=2&p=FiAdg9Fr1&v=fts&source=fcr&width=585&width_title=200&firstrowvalue=1&thm=A6C9E2,FCFDFD,4297D7,5C9CCC,FFFFFF,C5DBEC,FCFDFD,2E6E9E,000000&title=Currency%20Converter&tzo=240';
+  var div = document.getElementById('gcw_mainFiAdg9Fr1');
+  div.parentNode.insertBefore(sc, div);
+}
 
 // $.getJSON('http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/&callback=?', data => {
 // 	scrapedData = data.contents;
@@ -14,6 +33,11 @@ document.body.appendChild(mapScript);
 //   console.log(result);
 //   $('#gas-prices').append(result);
 // });
+
+// $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://gasprices.aaa.com/') + '&callback=?', data => {
+// 	console.log(data.contents);
+// });
+
 const gasPrices = `<table>
             <thead>
                 <tr>
@@ -65,68 +89,7 @@ const gasPrices = `<table>
         `;
 
 $('#gas-prices').append(gasPrices);
-
-// scrapeResults();
-// $.ajax({
-//   url: "http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/",
-//   dataType: "jsonp", //jsonP only since json runs into CORS bomb
-//   callback: "scrapeResults"
-// });
-
-
-
-// $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://gasprices.aaa.com/') + '&callback=?', data => {
-// 	console.log(data.contents);
-// });
-// var obj = {
-//   "originAddresses": [ "Greenwich, Greater London, UK", "13 Great Carleton Square, Edinburgh, City of Edinburgh EH16 4, UK" ],
-//   "destinationAddresses": [ "Stockholm County, Sweden", "Dlouhá 609/2, 110 00 Praha-Staré Město, Česká republika" ],
-//   "rows": [ {
-//     "elements": [ {
-//       "status": "OK",
-//       "duration": {
-//         "value": 70778,
-//         "text": "19 hours 40 mins"
-//       },
-//       "distance": {
-//         "value": 1887508,
-//         "text": "1173 mi"
-//       }
-//     }, {
-//       "status": "OK",
-//       "duration": {
-//         "value": 44476,
-//         "text": "12 hours 21 mins"
-//       },
-//       "distance": {
-//         "value": 1262780,
-//         "text": "785 mi"
-//       }
-//     } ]
-//   }, {
-//     "elements": [ {
-//       "status": "OK",
-//       "duration": {
-//         "value": 96000,
-//         "text": "1 day 3 hours"
-//       },
-//       "distance": {
-//         "value": 2566737,
-//         "text": "1595 mi"
-//       }
-//     }, {
-//       "status": "OK",
-//       "duration": {
-//         "value": 69698,
-//         "text": "19 hours 22 mins"
-//       },
-//       "distance": {
-//         "value": 1942009,
-//         "text": "1207 mi"
-//       }
-//     } ]
-//   } ]
-// };
+$("#results").css("height", $("#inputs").height()+4);
 
 function startMap() {
   let myLocation;
@@ -153,7 +116,7 @@ function startMap() {
           }
         }
       );
-      new AutocompleteDirectionsHandler(map);
+    mapHandler = new AutocompleteDirectionsHandler(map);
     });
   } else {
     window.alert('Your browser does not support geolocation service :/');
@@ -164,9 +127,10 @@ function startMap() {
       zoom: 10,
       center: myLocation
     });
-  new AutocompleteDirectionsHandler(map);
+  mapHandler = new AutocompleteDirectionsHandler(map);
 }
 
+//this class handles: autocompletion, route drawing, calculation of expenses.
 class AutocompleteDirectionsHandler {
   constructor(map) {
     this.map                = map;
@@ -176,6 +140,7 @@ class AutocompleteDirectionsHandler {
     this.avoidTolls         = false;
     this.unitSystem         = google.maps.UnitSystem.IMPERIAL;
     this.gasPrice           = 2.20;
+    this.mpg                = 29;
     this.directionsService  = new google.maps.DirectionsService();
     this.directionsDisplay  = new google.maps.DirectionsRenderer();
     this.directionsDisplay.setMap(map);
@@ -187,15 +152,35 @@ class AutocompleteDirectionsHandler {
 
     this.checkPlaceChange(originAutocomplete, 'ORIG');
     this.checkPlaceChange(destinationAutocomplete, 'DEST');
+  }
 
+  convertStrToNum(data) {
+    const dataArr = data.split('');
+    let result = [];
+    dataArr.forEach(el => {
+      if(!isNaN(el) && el !== ',') {
+        result.push(el);
+      }
+    });
+    // console.log('RESULTL ' + parseInt(result.join('') ,10));
+    return parseInt(result.join('') ,10);
   }
 
   calculateExpensesAndDisplayResults() {
-     const mpg           = parseInt(document.getElementById('mpg').value, 10);
-     const distance      = parseFloat(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
+
+    // console.log(`ORIGIN: ${this.originInput}, DEST: ${this.destinationInput}`);
+    let distance = this.distanceMatrixResponse.rows[0].elements[0].distance.text;
+     //chopping off ' mi' from the end of the string
+     distance = distance.slice(0, -3);
+     if (distance.length > 4) {
+           distance      = this.convertStrToNum(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
+     }
+     else distance       = parseFloat(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
+     const mpg           = parseInt(this.mpg, 10);
      const travelTime    = this.distanceMatrixResponse.rows[0].elements[0].duration.text;
      const amountOfGas   = (distance / mpg).toFixed(2);
      const cost          = (amountOfGas * this.gasPrice).toFixed(2);
+    //  console.log(`${mpg}, ${this.distanceMatrixResponse.rows[0].elements[0].distance.text}, ${this.gasPrice} ${amountOfGas}, ${cost}`);
      $('#results-text').html(`<ul>
                             <li>Traveling from: <span class="result-values">${this.originInput.value}</span> </li>
                             <li>To: <span class="result-values">${this.destinationInput.value}</span></li>
@@ -243,14 +228,18 @@ class AutocompleteDirectionsHandler {
           } else {
             me.destinationPlaceId  = place.place_id;
           }
-          me.avoidTolls = document.getElementById('avoid-tolls').checked;
-          me.route();
         });
       }
 
   route() {
     const me = this;
-    if (!this.originPlaceId || !this.destinationPlaceId) return;
+    this.gasPrice   = document.getElementById('gas-price-input').value;
+    this.mpg        = document.getElementById('mpg').value;
+    this.avoidTolls = document.getElementById('avoid-tolls').checked;
+    if (!this.originPlaceId || !this.destinationPlaceId || !this.mpg || !this.gasPrice) {
+      window.alert ('Make sure to fill out all the fields');
+      return;
+}
     this.getDistance();
     this.directionsService.route({
       origin:      { 'placeId': this.originPlaceId },
