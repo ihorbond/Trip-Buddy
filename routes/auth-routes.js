@@ -15,6 +15,25 @@ const errorMessages = {
 //   }
 // }
 
+//-----------------------RECOVER PASSWORD--------------
+router.get('/recover-password', (req, res, next) => {
+    res.render('recover-password-view.ejs');
+});
+
+router.post('/recover-password', (req, res, next) => {
+         UserModel.find(
+           req.body.userName,
+           (err, userFromDb) => {
+             if (err) return void next(err);
+             if(userFromDb.securityQuestion === req.body.securityQuestions && userFromDb.securityAnswer === req.body.answer) {
+               res.render('recover-password-view.ejs', {message: "Reset succesful. Your new password will be sent to the email on file"});
+               return;
+             }
+            res.render('recover-password-view.ejs', {message: "No account matched with provided data"});
+           }
+         );
+});
+
 //-----------------------SIGNUP------------------------
 router.get('/signup', (req, res, next) => {
   res.render('signup.ejs');

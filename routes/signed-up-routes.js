@@ -10,19 +10,7 @@ router.get('/profile', (req, res, next) => {
 });
 
 router.get('/new-car', (req, res, next) => {
-  if (typeof currentUser === "object") {
-      UserModel.findById(
-        currentUser_.id,
-        (err, userFromDb) => {
-          if (err) return void next (err);
-          // res.locals.cars = userFromDb.cars;
-          res.render('new-car-view.ejs');
-        }
-      );
-  }
-  else {
-  res.render('index.ejs');
-  }
+    res.render('new-car-view.ejs');
   });
 
 router.post('/new-car', (req, res, next) => {

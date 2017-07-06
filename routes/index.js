@@ -12,4 +12,5 @@ router.get('/new-trip', (req, res, next) => {
     res.render('new-trip-view.ejs');
 });
 
+
 module.exports = router;
