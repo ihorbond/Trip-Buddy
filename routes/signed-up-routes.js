@@ -6,19 +6,7 @@ const TripModel = require('../models/trip-model.js');
 
 //is there anyway to put user profile checking inside the function ????
 router.get('/profile', (req, res, next) => {
-  if (typeof currentUser === "object") {
-      UserModel.findById(
-        currentUser_.id,
-        (err, userFromDb) => {
-          if (err) return void next (err);
-          // res.locals.cars = userFromDb.cars;
-          res.render('user-profile.ejs');
-        }
-      );
-  }
-  else {
-  res.render('index.ejs');
-}
+  res.render('user-profile.ejs');
 });
 
 router.get('/new-car', (req, res, next) => {
@@ -33,7 +21,7 @@ router.get('/new-car', (req, res, next) => {
       );
   }
   else {
-  res.render('/');
+  res.render('index.ejs');
   }
   });
 
