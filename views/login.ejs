@@ -2,7 +2,7 @@
 
 <div class="container login-signup bg-primary">
   <h2> Login </h2>
-<% if (typeof error === 'object') { %>
+<% if (typeof error === 'string') { %>
        <p class="error"> <%= error %> </p>
 <% }; %>
   <form method="post" action="/login">

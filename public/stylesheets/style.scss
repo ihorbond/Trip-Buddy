@@ -9,9 +9,44 @@ body {
 ul > li {
   list-style-type: none;
 }
-
-#filter {
-  filter: blur(50%);
+.user-profile-view {
+  #add-car-link {
+    position: relative;
+    bottom: 0.5em;
+    vertical-align: super;
+  }
+  ul > li {
+   display: inline-block;
+   margin-right: 1.5em;
+  }
+  color: white;
+  margin-top: 2.5em;
+  a {
+    color: rgb(236, 124, 32);
+;
+  }
+  .user-text {
+    font-size: 2em;
+  }
+  .cars-images {
+    background: rgb(236, 124, 32);
+    margin-top: 1em;
+    text-align: center;
+    width: 10em;
+    height: 10em;
+    border: 2px rgb(135, 198, 37) solid;
+    border-radius: 50%;
+  img {
+    width: inherit;
+    height: inherit;
+  }
+  }
+  .cars-desc {
+    border-radius: 3px;
+    margin-top: 0.5em;
+    width: 10em;
+    text-align: center;
+  }
 }
 
 .header {
@@ -23,6 +58,7 @@ ul > li {
 }
 
 .footer {
+  margin: 0;
   text-align: center;
   img {
     width: 1.5em;
@@ -33,7 +69,7 @@ ul > li {
 }
 
 .error {
-  color: red;
+  color: rgb(233, 138, 26);
 }
 
 #new-trip-text {
@@ -63,7 +99,7 @@ ul > li {
 
 .login-signup {
   margin-top: 13em;
-  margin-bottom: 17em;
+  margin-bottom: 20em;
   border-radius: 5px;
   text-align: center;
   width: 30em;
@@ -75,6 +111,13 @@ ul > li {
   }
   a {
     color: white;
+  }
+}
+
+.add-new-vehicle {
+  color: white;
+  .required-field {
+    color: rgb(207, 61, 22);
   }
 }
 
@@ -97,6 +140,9 @@ ul > li {
   font-size: 20px;
   .result-values {
     color: yellow;
+  }
+  #save {
+  height: 2em;
   }
 }
 
@@ -123,7 +169,14 @@ ul > li {
   #calculate {
     margin-bottom: 1em;
   }
+  select {
+    width: 58%;
+    color: red;
+  }
 }
 .btn {
   width: 100%;
+}
+.btn-delete {
+  width: inherit;
 }

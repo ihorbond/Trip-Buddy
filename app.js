@@ -9,6 +9,7 @@ const mongoose     = require('mongoose');
 const session      = require('express-session');
 const passport     = require('passport');
 const request      = require('request');
+// const flash        = require('connect-flash');
 
 require('dotenv').config();
 require('jquery');
@@ -33,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(layouts);
+// app.use(flash());
 app.use(session({
   secret:            process.env.session_secret,
   resave:            true,
@@ -40,10 +42,13 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 //let's check whether the user is logged in
 app.use((req, res, next) => {
+  // res.locals.currentUser = null;
   if (req.user) {
     res.locals.currentUser = req.user;
+    
   }
   next();
 });

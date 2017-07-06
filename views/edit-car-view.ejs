@@ -1,9 +1,9 @@
 <div class="container login-signup add-new-vehicle bg-primary">
-<h2> Add a vehicle </h2>
+<h2> Edit Vehicle </h2>
   <% if (typeof error === 'string') { %>
     <p class="error"> <%= error %> </p>
   <% } %>
-<form method="post" action="/new-car">
+<form method="post" action="/<%=carId%>/update">
 <input id="vehicle-make" class="form-control" type="text" name="vehicleMake" placeholder="Make*">
 
 <input id="vehicle-model" class="form-control" type="text" name="vehicleModel" placeholder="Model*">

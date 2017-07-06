@@ -22,7 +22,7 @@ router.get('/signup', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
   if (req.body.userName === '' || req.body.password === '' || req.body.securityAnswer === '') {
-    console.log("------------------------Empty field triggered-------------------------");
+    // console.log("------------------------Empty field triggered-------------------------");
   res.render('signup.ejs', {error: errorMessages.noInputMessage});
   return;
   }
@@ -33,7 +33,7 @@ router.post('/signup', (req, res, next) => {
       if (err) return void next(err);      // check for DB error
       if(userFromDb) {
         // const alreadyExistsMessage = "The username you entered is already in use";
-        console.log("--------------------errorMessages.alreadyExistsMessage");
+        // console.log(errorMessages.alreadyExistsMessage);
          res.render('signup.ejs', {error: errorMessages.alreadyExistsMessage});
           return;
       }
@@ -43,13 +43,14 @@ router.post('/signup', (req, res, next) => {
       fullName:         req.body.fullName,
       userName:         req.body.userName,
       password:         scrambledPassword,
-      securityQuestion: req.body.securityQuestions,
-      securityAnswer:   req.body.sequrityAnswer
+      securityQuestion: req.body.securityQuestions, // how to save selected option ?d
+      securityAnswer:   req.body.securityAnswer
     });
     newUser.save((err) => {
-      console.log("----------------------SAVED");
+      // console.log("----------------------SAVED");
     if (err) return void next(err);
-    res.redirect('/profile');
+    res.locals.currentUser = req.user;
+    res.redirect('/login');
     });
     }
   );
@@ -64,7 +65,7 @@ router.post('/login', passport.authenticate(
   'local',
   {
     successRedirect: '/profile',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
   }
 ));
 

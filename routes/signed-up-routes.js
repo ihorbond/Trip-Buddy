@@ -2,28 +2,40 @@ const express = require('express');
 const router  = express.Router();
 const CarModel  = require('../models/car-model.js');
 const UserModel = require('../models/user-model.js');
+const TripModel = require('../models/trip-model.js');
 
-
-router.get('/new-trip', (req, res, next) => {
-if (req.user) {
-    UserModel.findById(
-      req.user_.id,
-      (err, userFromDb) => {
-        if (err) return void next (err);
-        res.locals.cars = userFromDb.cars;
-        res.render('new-trip-view.ejs');
-      }
-    );
+//is there anyway to put user profile checking inside the function ????
+router.get('/profile', (req, res, next) => {
+  if (typeof currentUser === "object") {
+      UserModel.findById(
+        currentUser_.id,
+        (err, userFromDb) => {
+          if (err) return void next (err);
+          // res.locals.cars = userFromDb.cars;
+          res.render('user-profile.ejs');
+        }
+      );
+  }
+  else {
+  res.render('/');
 }
-else {
-    res.render('new-trip-view.ejs');
-}
-
 });
 
 router.get('/new-car', (req, res, next) => {
-  res.render('new-car-view.ejs');
-});
+  if (typeof currentUser === "object") {
+      UserModel.findById(
+        currentUser_.id,
+        (err, userFromDb) => {
+          if (err) return void next (err);
+          // res.locals.cars = userFromDb.cars;
+          res.render('new-car-view.ejs');
+        }
+      );
+  }
+  else {
+  res.render('/');
+  }
+  });
 
 router.post('/new-car', (req, res, next) => {
   const newCar = new CarModel({
@@ -40,9 +52,14 @@ router.post('/new-car', (req, res, next) => {
     (err, userFromDb) => {
       if(err) return void next(err);
 
-     console.log('----------------userFromDb--------------');
+    //  console.log('----------------userFromDb--------------');
      console.log(userFromDb);
      //2nd add new car to his inventory
+     if (!newCar.model || !newCar.make || !newCar.mpg) {
+       console.log("--------EMPTY FILEDS DETECTED");
+       res.render('new-car-view.ejs', {error: "Pls make sure to fill out required fileds!"});
+       return;
+     }
      userFromDb.cars.push(newCar);
      //3rd save changes
      userFromDb.save((err) => {
@@ -52,11 +69,28 @@ router.post('/new-car', (req, res, next) => {
 });
   });
 
-router.get('/profile', (req, res, next) => {
-  res.render('user-profile.ejs');
-});
-// find and splice from array this way or findByIdAndRemove from cars collection
-// and simply update user ???
+// save trip to DB
+  router.post("/new-trip-save", (req, res, next) => {
+    const newTrip = new TripModel ({
+      origin:      req.body.origin,
+      destination: req.body.destination,
+      distance:    req.body.distance,
+      gas:         req.body.gas,
+      cost:        req.body.cost
+    });
+    TripModel.findById(
+      req.user._id,
+      (err, userFromDb) => {
+        if(err) return void next(err);
+       userFromDb.trips.push(newTrip);
+       userFromDb.save((err) => {
+         if(err) return void next(err);
+         res.redirect('/profile');
+       });
+  });
+  });
+
+//remove car
 router.post('/:carId/delete', (req, res, next) => {
   const carToRemoveId = req.params.carId;
   // console.log('---------CAR TO REMOVE: ' + carToRemoveId);
@@ -82,5 +116,54 @@ router.post('/:carId/delete', (req, res, next) => {
   );
 });
 
+//update car
+router.get('/:carId/update', (req, res, next) => {
+    const carToEditId = req.params.carId;
+    UserModel.findById(
+      req.user._id,
+      (err, userFromDb) => {
+        if (err) return void next(err);
+        res.render("edit-car-view.ejs", {carId: carToEditId});
+      }
+    );
+});
+
+router.post('/:carId/update', (req, res, next) => {
+   const carToEditId = req.params.carId;
+  const editedCar = {
+      make:  req.body.vehicleMake,
+      model: req.body.vehicleModel,
+      year:  req.body.vehicleYear,
+      mpg:   req.body.vehicleMPG,
+      desc:  req.body.vehicleDesc,
+  };
+     UserModel.findById(
+       req.user._id,
+       (err, userFromDb) => {
+         if (err) return void next (err);
+         if (!editedCar.model || !editedCar.make || !editedCar.mpg) {
+           res.render('edit-car-view.ejs', {error: "Pls make sure to fill out required fileds"});
+           return;
+         }
+         userFromDb.cars.forEach((oneCar, index) => {
+           console.log("ONE CAR ID: " + oneCar._id);
+             console.log("editedCarId " + carToEditId);
+           if (oneCar._id.toString() === carToEditId.toString()) {
+             console.log("TRIGGERED LOOP");
+             userFromDb.cars[index].make  = editedCar.make;
+             userFromDb.cars[index].model = editedCar.model;
+             userFromDb.cars[index].year  = editedCar.year;
+             userFromDb.cars[index].mpg   = editedCar.mpg;
+             userFromDb.cars[index].desc  = editedCar.desc;
+           }
+         });
+         userFromDb.save((err) => {
+           if(err) return void next(err);
+         console.log(userFromDb.cars[0]);
+           res.redirect('/profile');
+             });
+       }
+     );
+});
 
 module.exports = router;

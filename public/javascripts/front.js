@@ -5,10 +5,22 @@ let mapHandler;
 mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${mapKey}&libraries=places&callback=startMap`;
 document.body.appendChild(mapScript);
 
-document.getElementById('calculate').onclick = () => {
+$('#cars-dropdown').on('change', () => {
+    $("#mpg").val($("#cars-dropdown option:selected").val());
+});
+
+$('#calculate').on('click', () => {
+  // console.log("CURRENT USER: " + user);
   mapHandler.route();
+  if(typeof loggedInUser === 'object') {
+    console.log('TRIGGERED');
+    $('#save').html(`<form method="post" action="/new-trip-save">
+                           <button class="btn btn-success"> SAVE THIS TRIP </button>
+                           </form>`);
+  }
   reloadFiAdg9Fr1();
-};
+
+});
 
 //currency converter widget
 function reloadFiAdg9Fr1() {
@@ -168,7 +180,7 @@ class AutocompleteDirectionsHandler {
 
   calculateExpensesAndDisplayResults() {
 
-    // console.log(`ORIGIN: ${this.originInput}, DEST: ${this.destinationInput}`);
+    console.log(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
     let distance = this.distanceMatrixResponse.rows[0].elements[0].distance.text;
      //chopping off ' mi' from the end of the string
      distance = distance.slice(0, -3);
@@ -204,6 +216,7 @@ class AutocompleteDirectionsHandler {
       avoidTolls:    this.avoidTolls
     }, (response, status) => {
       if (status === "OK") {
+        console.log("DISTANCE MATRIX: " + response);
         me.distanceMatrixResponse = response;
         me.calculateExpensesAndDisplayResults();
       }

@@ -1,7 +1,7 @@
 <div class="container login-signup bg-primary">
 <h2> Create account </h2>
-<% if (typeof error === 'object') { %>
-       <p> <%= error %> </p>
+<% if (typeof error === 'string') { %>
+       <p class="error"> <%= error %> </p>
 <% }; %>
   <form class="form" method="post" action="/signup">
     <input class="form-control" id="full-name" type="text" name="fullName" placeholder="Enter Name">

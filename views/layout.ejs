@@ -22,7 +22,11 @@
       <div class="row header navbar-fixed-top">
     <header>
       <div class=col-md-6>
-    <h1> Welcome to your personal Trip Buddy ! </h1>
+            <% if(typeof currentUser === 'object') { %>
+    <h1> Welcome to your personal TripBuddy, <%= currentUser.userName %> ! </h1>
+    <% } else { %>
+      <h1> Welcome to your personal TripBuddy</h1>
+     <% } %>
   </div>
   <div class="col-md-6">
     <nav>

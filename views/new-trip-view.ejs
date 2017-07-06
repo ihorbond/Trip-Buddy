@@ -15,13 +15,16 @@
           <label for="destination-input">Enter Destination</label>
           <input type="text" class="form-control" id="destination-input" name="destinationInput" placeholder="Where are you headed ?"></li>
         <li>
-          <% if(typeof currentUser === 'object') { %>
-            <select class="secutiry-questions">
-       <% cars.forEach(oneCar => { %>
-          <option> <%= oneCar %> </option>
-       <% });} %>
-      </select>
+
             <label for="mpg">Enter <abbr title="Miles Per Gallon" class="initialism">MPG</abbr></label>
+            <% if(typeof currentUser === 'object' && currentUser.cars.length > 0) { %>
+              <b>or select car</b>
+              <select id="cars-dropdown">
+              <option> </option>
+         <% currentUser.cars.forEach(oneCar => { %>
+            <option value="<%= oneCar.mpg %>"> <%= oneCar.make %> <%= oneCar.model %> MPG: <%= oneCar.mpg %> </option>
+         <% });} %>
+        </select>
             <input type="number" class="form-control" id="mpg" name="mpg" value="29"></li>
         <li>
           <label for="gas-price-input">Enter Gas Price</label>
@@ -30,13 +33,13 @@
           <label for="avoid-tolls"> Avoid tolls? </label>
         </li>
         <li> <button id="calculate" class="btn btn-info"> Calculate </button> </li>
-
       </ul>
     </div>
 
     <div id="results" class="col-md-6 bg-primary">
       <h2> Results </h2>
       <div id="results-text"></div>
+      <div id="save"></div>
       <!-- currency converter vidget -->
       <div id='gcw_mainFiAdg9Fr1' class='gcw_mainFiAdg9Fr1'></div>
     </div>
@@ -46,6 +49,10 @@
   </div>
 </div>
 <script>
-  let googleMapsKey = '<%= googleMapsKey %>';
+let googleMapsKey = '<%= googleMapsKey %>';
+   if (typeof "<%= locals.currentUser %>" !== "undefined" && typeof "<%= locals.currentUser %>" === "object") {
+   let loggedInUser = '<%= locals.currentUser %>';
+   console.log("CURRENT USER IS DEFINED " + loggedInUser);
+   }
 </script>
 <script type='text/javascript' src="/javascripts/front.js"></script>
