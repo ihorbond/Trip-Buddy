@@ -17,7 +17,7 @@ router.get('/profile', (req, res, next) => {
       );
   }
   else {
-  res.render('/');
+  res.render('index.ejs');
 }
 });
 
