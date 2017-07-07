@@ -18,34 +18,33 @@
     <link rel="stylesheet" href="/stylesheets/style.min.css">
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row header navbar-fixed-top">
-    <header>
-      <div class=col-md-6>
-            <% if(typeof currentUser === 'object') { %>
-    <h1> Welcome to your personal TripBuddy, <%= currentUser.userName %> ! </h1>
-    <% } else { %>
-      <h1> Welcome to your personal TripBuddy!</h1>
-     <% } %>
-  </div>
-  <div class="col-md-6">
-    <nav>
-   <ul class="nav nav-pills menu">
-      <li role="presentation" class="active"><a href="/">Home</a></li>
-     <li role="presentation"><a href="/new-trip">New Trip</a></li>
+    <div class="bg-blur"> </div>
     <% if(typeof currentUser === 'object') { %>
-      <li role="presentation"><a href="/profile">My Profile</a></li>
-      <li role="presentation"><a href="/logout">Logout</a></li>
-  <% } else { %>
-  <li role="presentation"><a href="/login">Login</a></li>
-  <li role="presentation"><a href="/signup">Sign Up</a></li>
-</ul>
-  <% } %>
-    </nav>
-  </div>
-  </header>
+<span id="greeting-text"> Hello, <%= currentUser.userName %> ! </span>
+<% } %>
+      <div class="container">
+      <div class="row">
+      <div class="navigation">
+
+      <ul>
+      <li class="pos1"><a href="/">Home</a></li>
+      <li class="pos2"><a href="/new-trip">New Trip</a></li>
+      <% if(typeof currentUser === 'object') { %>
+      <li  class="pos3"><a href="/profile">My Profile</a></li>
+      <li  class="pos4"><a href="/logout">Logout</a></li>
+      <% } else { %>
+      <li class="pos3"><a href="/login">Login</a></li>
+      <li  class="pos4"><a href="/signup">Sign Up</a></li>
+      </ul>
+      <% } %>
+      </div>
+      </div>
+<div class="row">
+    <%- body %>
 </div>
 
+</div>
+<div class="container-fluid">
 <div class="row footer">
 <span id="contacts">Trip Buddy 2017 | Contact: </span>
 <a href="https://www.linkedin.com/in/ibodnarchuk/"><img src="../images/linkedin.png"></a>
@@ -53,8 +52,6 @@
 <a href="mailto:ihorbond@gmail.com"><img src="../images/email.png"></a>
 </div>
 </div>
-
-    <%- body %>
 
 </body>
 </html>

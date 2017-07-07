@@ -1,14 +1,14 @@
 <div class="user-profile-view">
-  <span class="user-text"> My Cars </span>
-  <span id="add-car-link"><a href="/new-car">|Add|</a></span>
-  <ul>
+  <span class="my-garage-text"> My Garage </span>
+  <span class="add-link"><a href="/new-car">|Add|</a></span>
+  <ul class="user-inventory">
     <%  if(currentUser.cars.length > 0) { %>
       <% currentUser.cars.forEach((oneCar) => { %>
         <li>
           <div class="cars-images"><img src="<%=oneCar.image%>"></div>
           <div class="cars-desc bg-primary">
-            |
-            <%= oneCar.year %>
+
+          | <%= oneCar.year %>
             <%= oneCar.make %>
               <%= oneCar.model %>|
 
@@ -21,28 +21,29 @@
                       </form>
 
                       <form method="post" action="/<%=oneCar._id%>/delete">
-                        <button class="pic btn btn-danger"> Delete </button>
+                        <button class="car-button btn btn-danger"> Delete </button>
                       </form>
                       <% })}; %>
           </div>
         </li>
   </ul>
-
+  <hr>
+  <span class="my-trips-text"> My Trips </span>
+<span class="add-link"><a href="/new-trip">|New|</a></span>
+<ul class="user-trips">
   <%  if(currentUser.trips.length > 0) { %>
     <% currentUser.trips.forEach((oneTrip) => { %>
-      <span class="user-text"> My Trips </span>
-       <ul>
-      <li>
-        <div class="trips-images"></div>
-        <div class="trips-desc">
-          <%= oneTrip.origin %>
-            <%= oneTrip.destination %>
-              <%= oneTrip.distance %>
-                <%= oneTrip.gas %>
-                  <%= oneTrip.cost %>
+<li>
+        <div class="trip-images"><img src="<%=oneTrip.image%>"></div>
+        <div class="trip-desc">
+          <i> <%= oneTrip.origin %></i> <br>
+           <i> <%= oneTrip.destination %> </i><br>
+            Distance: <%= oneTrip.distance %> <br>
+              Used: <%= oneTrip.gas %> of gas <br>
+                Spent: $<%= oneTrip.cost %> <br>
 
-                    <form method="post" action="/<%=oneTrip._id%>/delete">
-                      <button class="trip btn btn-danger"> Delete </button>
+                    <form method="post" action="/<%=oneTrip._id%>/delete-trip">
+                      <button class="trip-button btn btn-danger"> Delete </button>
                     </form>
                     <% })}; %>
         </div>
@@ -50,13 +51,12 @@
       </ul>
 
 </div>
-
 <script>
-  $('.pic').on('click', () => {
+  $('.car-button').on('click', () => {
     $('.cars-images').remove();
   });
 
-  $('.trip').on('click', () => {
+  $('.trip-button').on('click', () => {
     $('.trip-images').remove();
   });
 </script>

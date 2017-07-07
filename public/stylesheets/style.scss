@@ -1,7 +1,5 @@
 body {
   height: 100%;
-  background-image: url("../images/background.jpg");
-  background-size: cover;
   font-family: 'Bree Serif', serif;
   font-size: 20px;
 }
@@ -10,64 +8,155 @@ ul > li {
   list-style-type: none;
 }
 
+.bg-blur {
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+  filter: blur(2px) grayscale(50%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#greeting-text {
+  position: fixed;
+  top: 0;
+  right: 0;
+  color: white;
+}
+
 #map {
-  border: 2px solid red;
+  border: 2px solid black;
   border-radius: 5px;
   width: 100%;
   height: 536px;
   margin-bottom: 3em;
 }
 
-.user-profile-view {
-  #add-car-link {
-    position: relative;
-    bottom: 0.5em;
-    vertical-align: super;
+.add-link {
+  position: relative;
+  bottom: 0.5em;
+  vertical-align: super;
+
+  a {
+    border-radius: 5px;
+    color: rgb(221, 149, 42);
+    background: black;
   }
+
+  a:hover {
+    color: white;
+  }
+}
+
+.my-trips-text {
+  font-size: 2em;
+  color: white;
+}
+
+.user-profile-view {
   ul > li {
-   display: inline-block;
-   margin-right: 1.5em;
+    display: inline-block;
+    margin-right: 1em;
   }
   color: white;
-  margin-top: 2.5em;
-  a {
-    color: rgb(236, 124, 32);
-;
-  }
-  .user-text {
+
+  .my-garage-text {
     font-size: 2em;
   }
+
   .cars-images {
+    border: 2px rgb(135, 198, 37) solid;
+    border-radius: 50%;
     background: rgb(236, 124, 32);
     margin-top: 1em;
     text-align: center;
     width: 10em;
     height: 10em;
-    border: 2px rgb(135, 198, 37) solid;
-    border-radius: 50%;
-  img {
-    width: inherit;
-    height: inherit;
+
+    img {
+      width: inherit;
+      height: inherit;
+    }
   }
-  }
+
   .cars-desc {
     border-radius: 3px;
     margin-top: 0.5em;
     width: 10em;
     text-align: center;
   }
+
+  .trip-desc {
+    margin-bottom: 4em;
+  }
+
+  .trip-images {
+    width: 11.2em;
+    height: 11.2em;
+
+    img {
+      margin-left: -0.1em;
+      width: 25em;
+      height: 20em;
+      border: 2px rgb(135, 198, 37) solid;
+      border-radius: 10px;
+    }
+  }
 }
 
-.header {
-  background: white;
-  h1 {
-    padding: 0;
-    margin: 0;
+.navigation {
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 50%;
+  background-image: url('../images/compass.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 12em;
+  height: 12em;
+
+  a {
+    color: rgb(221, 149, 42);
+    text-decoration: none;
+    font-size: 1.2em;
+    background: black;
+    border-radius: 5px;
+  }
+
+  a:hover {
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .pos1 {
+    position: relative;
+    top: 0.4em;
+    right: 0.9em;
+  }
+
+  .pos2 {
+    position: relative;
+    top: 7.9em;
+    right: 0.9em;
+  }
+
+  .pos3 {
+    position: relative;
+    top: 1.4em;
+    right: 6.5em;
+  }
+
+  .pos4 {
+    position: relative;
+    bottom: 0.2em;
+    left: 4.7em;
   }
 }
 
 .error {
-  color: rgb(233, 138, 26);
+  color: rgb(221, 149, 42);
 }
 
 #new-trip-text {
@@ -79,34 +168,31 @@ ul > li {
 }
 
 .index {
-  // background-image: url('../images/family-road-trip.jpg');
-  // background-repeat: no-repeat;
-  // background-size: cover;
-  margin-top: 15em;
-  text-align: center;
-  #index-page-quote{
+  margin-top: 9em;
+  .blockquote {
     font-family: 'Bellefair', serif;
-    font-size: 3em;
+    font-size: 2.4em;
+    color: white;
+    text-shadow: 2px 2px black;
+  }
+  footer {
     color: white;
   }
 }
 
-.menu {
-  float: right;
-}
-
 .login-signup {
-  margin-top: 13em;
-  margin-bottom: 20em;
+  padding: 1em;
+  margin: 5em auto;
   border-radius: 5px;
   text-align: center;
   width: 30em;
   height: 100%;
 
   .security-questions {
-    color: red;
+    color: rgb(221, 149, 42);
     width: 100%;
   }
+
   a {
     color: white;
   }
@@ -114,26 +200,30 @@ ul > li {
 
 .add-new-vehicle {
   color: white;
+
   .required-field {
-    color: rgb(207, 61, 22);
+    color: rgb(221, 149, 42);
   }
 }
 
 #results {
   b {
-    color: rgb(58, 228, 142);
+    color: yellow;
   }
+
   h2 {
     text-align: center;
   }
-  border: 2px solid red;
+  border: 2px solid black;
   border-radius: 5px;
   font-size: 20px;
+
   .result-values {
     color: yellow;
   }
+
   #save {
-  height: 2em;
+    height: 2em;
   }
 }
 
@@ -144,7 +234,8 @@ ul > li {
 
 #gas-prices {
   table {
-    margin-left: 50px;
+    font-size: 0.9em;
+    margin-left: 1em;
     text-align: center;
   }
 
@@ -155,19 +246,28 @@ ul > li {
 }
 
 #inputs {
-  border: 2px solid red;
+  border: 2px solid black;
   border-radius: 5px;
+
   #calculate {
     margin-bottom: 1em;
   }
+
   select {
-    width: 58%;
-    color: red;
+    border-radius: 5px;
+    border: 2px solid white;
+    width: 59%;
+    color: black;
+    background: rgb(221, 149, 42);
   }
 }
+
 .btn {
+  text-transform: uppercase;
+  font-size: 1.2em;
   width: 100%;
 }
+
 .btn-delete {
   width: inherit;
 }
@@ -177,8 +277,8 @@ ul > li {
   position: fixed;
   bottom: 0;
   width: 100%;
-  // margin: 0;
   text-align: center;
+
   img {
     width: 1.5em;
     height: 1.5em;

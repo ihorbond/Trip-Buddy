@@ -20,7 +20,7 @@
             <% if(typeof currentUser === 'object' && currentUser.cars.length > 0) { %>
               <b>or select car</b>
               <select id="cars-dropdown">
-              <option> </option>
+              <option id="default"> </option>
          <% currentUser.cars.forEach(oneCar => { %>
             <option value="<%= oneCar.mpg %>"> <%= oneCar.make %> <%= oneCar.model %> MPG: <%= oneCar.mpg %> </option>
          <% });} %>
@@ -39,7 +39,18 @@
     <div id="results" class="col-md-6 bg-primary">
       <h2> Results </h2>
       <div id="results-text"></div>
-      <div id="save"></div>
+      <div id="save" class="hidden">
+        <% if (typeof currentUser === "object") { %>
+          <form method="post" action="/new-trip-save">
+            <input id="origin"      type="hidden" name="origin">
+            <input id="destination" type="hidden" name="destination">
+            <input id="distance"    type="hidden" name="distance">
+            <input id="gas"         type="hidden" name="gas">
+            <input id="cost"        type="hidden" name="cost">
+         <button class="btn btn-success"> SAVE THIS TRIP </button>
+         </form>`
+        <%  };  %>
+      </div>
       <!-- currency converter vidget -->
       <div id='gcw_mainFiAdg9Fr1' class='gcw_mainFiAdg9Fr1'></div>
     </div>
@@ -50,9 +61,5 @@
 </div>
 <script>
 let googleMapsKey = '<%= googleMapsKey %>';
-   if (typeof "<%= locals.currentUser %>" !== "undefined" && typeof "<%= locals.currentUser %>" === "object") {
-   let loggedInUser = '<%= locals.currentUser %>';
-   console.log("CURRENT USER IS DEFINED " + loggedInUser);
-   }
 </script>
 <script type='text/javascript' src="/javascripts/front.js"></script>

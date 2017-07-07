@@ -12,14 +12,6 @@ $('#cars-dropdown').on('change', () => {
 $('#calculate').on('click', () => {
   // console.log("CURRENT USER: " + user);
   mapHandler.route();
-  if(typeof loggedInUser === 'object') {
-    console.log('TRIGGERED');
-    $('#save').html(`<form method="post" action="/new-trip-save">
-                           <button class="btn btn-success"> SAVE THIS TRIP </button>
-                           </form>`);
-  }
-  reloadFiAdg9Fr1();
-
 });
 
 //currency converter widget
@@ -102,6 +94,7 @@ const gasPrices = `<table>
 
 $('#gas-prices').append(gasPrices);
 $("#results").css("height", $("#inputs").height()+4);
+reloadFiAdg9Fr1();
 
 function startMap() {
   let myLocation;
@@ -202,6 +195,14 @@ class AutocompleteDirectionsHandler {
                             <hr>
                             <li> Cost of this trip: <b>$${cost}</b> </li>
                          <ul>`);
+      $('#save').removeClass('hidden');
+     if (typeof $('#origin') === 'object') {
+       $('#origin').val(this.originInput.value);
+       $('#destination').val(this.destinationInput.value);
+       $('#distance').val(distance);
+       $('#gas').val(amountOfGas);
+       $('#cost').val(cost);
+     }
   }
 
   getDistance() {

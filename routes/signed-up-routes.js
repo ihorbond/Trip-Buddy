@@ -6,43 +6,13 @@ const TripModel = require('../models/trip-model.js');
 
 //is there anyway to put user profile checking inside the function ????
 router.get('/profile', (req, res, next) => {
+  if(!req.user) res.redirect('/');
   res.render('user-profile.ejs');
 });
 
 router.get('/new-car', (req, res, next) => {
+  if(!req.user) res.redirect('/');
     res.render('new-car-view.ejs');
-  });
-
-router.post('/new-car', (req, res, next) => {
-  const newCar = new CarModel({
-    make:  req.body.vehicleMake,
-    model: req.body.vehicleModel,
-    year:  req.body.vehicleYear,
-    mpg:   req.body.vehicleMPG,
-    desc:  req.body.vehicleDesc,
-    owner: req.user.userName
-  });
-  // 1ST step: find the user in DB
-  UserModel.findById(
-    req.user._id,
-    (err, userFromDb) => {
-      if(err) return void next(err);
-
-    //  console.log('----------------userFromDb--------------');
-     console.log(userFromDb);
-     //2nd add new car to his inventory
-     if (!newCar.model || !newCar.make || !newCar.mpg) {
-       console.log("--------EMPTY FILEDS DETECTED");
-       res.render('new-car-view.ejs', {error: "Pls make sure to fill out required fileds!"});
-       return;
-     }
-     userFromDb.cars.push(newCar);
-     //3rd save changes
-     userFromDb.save((err) => {
-       if(err) return void next(err);
-       res.redirect('/profile');
-     });
-});
   });
 
 // save trip to DB
@@ -52,9 +22,10 @@ router.post('/new-car', (req, res, next) => {
       destination: req.body.destination,
       distance:    req.body.distance,
       gas:         req.body.gas,
-      cost:        req.body.cost
+      cost:        req.body.cost,
+      traveler:    req.user.userName
     });
-    TripModel.findById(
+    UserModel.findById(
       req.user._id,
       (err, userFromDb) => {
         if(err) return void next(err);
@@ -65,6 +36,59 @@ router.post('/new-car', (req, res, next) => {
        });
   });
   });
+
+  //remove trip
+  router.post('/:tripId/delete-trip', (req, res, next) => {
+    const tripToRemoveId = req.params.tripId;
+    UserModel.findOne(
+      req.user._id,
+      (err, userFromDb) => {
+        if (err) return void next(err);
+        userFromDb.trips.forEach((oneTrip, index) => {
+          if (oneTrip._id.toString() === tripToRemoveId.toString()) {
+            userFromDb.trips.splice(index, 1);
+          }
+        });
+        userFromDb.save((err) => {
+          if(err) return void next(err);
+          res.redirect('/profile');
+        });
+      }
+    );
+  });
+
+  //add car
+  router.post('/new-car', (req, res, next) => {
+    const newCar = new CarModel({
+      make:  req.body.vehicleMake,
+      model: req.body.vehicleModel,
+      year:  req.body.vehicleYear,
+      mpg:   req.body.vehicleMPG,
+      desc:  req.body.vehicleDesc,
+      owner: req.user.userName
+    });
+    // 1ST step: find the user in DB
+    UserModel.findById(
+      req.user._id,
+      (err, userFromDb) => {
+        if(err) return void next(err);
+
+      //  console.log('----------------userFromDb--------------');
+       console.log(userFromDb);
+       //2nd add new car to his inventory
+       if (!newCar.model || !newCar.make || !newCar.mpg) {
+        //  console.log("--------EMPTY FILEDS DETECTED");
+         res.render('new-car-view.ejs', {error: "Pls make sure to fill out required fileds!"});
+         return;
+       }
+       userFromDb.cars.push(newCar);
+       //3rd save changes
+       userFromDb.save((err) => {
+         if(err) return void next(err);
+         res.redirect('/profile');
+       });
+  });
+    });
 
 //remove car
 router.post('/:carId/delete', (req, res, next) => {
@@ -133,9 +157,10 @@ router.post('/:carId/update', (req, res, next) => {
              userFromDb.cars[index].desc  = editedCar.desc;
            }
          });
+         userFromDb.markModified('cars');
          userFromDb.save((err) => {
            if(err) return void next(err);
-         console.log(userFromDb.cars[0]);
+         console.log(userFromDb.cars[theIndex]);
            res.redirect('/profile');
              });
        }

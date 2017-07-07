@@ -36,6 +36,7 @@ router.post('/recover-password', (req, res, next) => {
 
 //-----------------------SIGNUP------------------------
 router.get('/signup', (req, res, next) => {
+  if(req.user) res.redirect('/');
   res.render('signup.ejs');
 });
 
@@ -51,8 +52,6 @@ router.post('/signup', (req, res, next) => {
       console.log("-----------DB Error-----------------");
       if (err) return void next(err);      // check for DB error
       if(userFromDb) {
-        // const alreadyExistsMessage = "The username you entered is already in use";
-        // console.log(errorMessages.alreadyExistsMessage);
          res.render('signup.ejs', {error: errorMessages.alreadyExistsMessage});
           return;
       }
@@ -62,7 +61,7 @@ router.post('/signup', (req, res, next) => {
       fullName:         req.body.fullName,
       userName:         req.body.userName,
       password:         scrambledPassword,
-      securityQuestion: req.body.securityQuestions, // how to save selected option ?d
+      securityQuestion: req.body.securityQuestion, // how to save selected option ?
       securityAnswer:   req.body.securityAnswer
     });
     newUser.save((err) => {
@@ -77,7 +76,7 @@ router.post('/signup', (req, res, next) => {
 
 //-------------------LOGIN-------------------------
 router.get('/login', (req, res, next) => {
-  // if(req.user) res.redirect('/');
+  if(req.user) res.redirect('/');
   res.render('login.ejs');
 });
 router.post('/login', passport.authenticate(
