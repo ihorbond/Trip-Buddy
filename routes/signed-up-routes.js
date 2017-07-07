@@ -146,10 +146,9 @@ router.post('/:carId/update', (req, res, next) => {
            return;
          }
          userFromDb.cars.forEach((oneCar, index) => {
-           console.log("ONE CAR ID: " + oneCar._id);
-             console.log("editedCarId " + carToEditId);
+          //  console.log("ONE CAR ID: " + oneCar._id);
+          //    console.log("editedCarId " + carToEditId);
            if (oneCar._id.toString() === carToEditId.toString()) {
-             console.log("TRIGGERED LOOP");
              userFromDb.cars[index].make  = editedCar.make;
              userFromDb.cars[index].model = editedCar.model;
              userFromDb.cars[index].year  = editedCar.year;
@@ -160,7 +159,6 @@ router.post('/:carId/update', (req, res, next) => {
          userFromDb.markModified('cars');
          userFromDb.save((err) => {
            if(err) return void next(err);
-         console.log(userFromDb.cars[theIndex]);
            res.redirect('/profile');
              });
        }

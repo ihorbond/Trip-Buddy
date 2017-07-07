@@ -56,7 +56,7 @@ ul > li {
   color: white;
 }
 
-.user-profile-view {
+.user-garage-view {
   ul > li {
     display: inline-block;
     margin-right: 1em;
@@ -88,14 +88,21 @@ ul > li {
     width: 10em;
     text-align: center;
   }
+}
 
+.user-trips-view {
+  ul > li {
+    display: inline-block;
+    margin-right: 1em;
+  }
+  color: white;
   .trip-desc {
     margin-bottom: 4em;
   }
 
   .trip-images {
     width: 11.2em;
-    height: 11.2em;
+    height: 10.5em;
 
     img {
       margin-left: -0.1em;
@@ -106,6 +113,7 @@ ul > li {
     }
   }
 }
+
 
 .navigation {
   margin: 0 auto;
@@ -268,9 +276,6 @@ ul > li {
   width: 100%;
 }
 
-.btn-delete {
-  width: inherit;
-}
 
 .footer {
   background: white;
