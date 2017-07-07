@@ -94,5 +94,28 @@ router.get('/logout', (req, res, next) => {
 });
 
 //-----------------SOCIAL LOGINS--------------------
+router.get('/auth/facebook', passport.authenticate('facebook'));
+router.get('/auth/facebook/callback', passport.authenticate(
+  'facebook',
+   {
+     successRedirect: '/',
+     failureRedirect: '/login'
+   }
+));
+
+router.get('/auth/google', passport.authenticate(
+  'google',
+  {
+    scope: ["https://www.googleapis.com/auth/plus.login",
+          "https://www.googleapis.com/auth/plus.profile.emails.read"]
+  }
+));
+router.get('/auth/google/callback', passport.authenticate(
+  'google',
+   {
+     successRedirect: '/',
+     failureRedirect: '/login'
+   }
+));
 
 module.exports = router;

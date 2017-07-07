@@ -4,10 +4,10 @@ const Schema = mongoose.Schema;
 
 const UserModel = new Schema ({
   fullName:         {type: String},
-  userName:         {type: String, required: true},
-  password:         {type: String, required: true},
+  userName:         {type: String},
+  password:         {type: String},
   securityQuestion: {type: String, required: true, default: "City you were born"},
-  securityAnswer:   {type: String, required: true},
+  securityAnswer:   {type: String},
   facebookId:       {type: String},
   googleId:         {type: String},
   cars:             {type: Array},

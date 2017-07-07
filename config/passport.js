@@ -51,8 +51,8 @@ passport.use(new FbStrategy(
        callbackURL:  '/auth/facebook/callback' //whatever URL you want
      },
      (accessToken, refreshToken, profile, next) => {
-       console.log("FACEBOOK PROFILE INFO");
-       console.log(profile);
+      //  console.log("FACEBOOK PROFILE INFO");
+      //  console.log(profile);
         UserModel.findOne(
           {facebookId: profile.id},
           (err, userFromDb) => {
@@ -89,8 +89,8 @@ passport.use(new GoogleStrategy(
        callbackURL:  '/auth/google/callback' //whatever URL you want
      },
      (accessToken, refreshToken, profile, next) => {
-       console.log("GOOGLE PROFILE INFO");
-       console.log(profile);
+      //  console.log("GOOGLE PROFILE INFO");
+      //  console.log(profile);
         UserModel.findOne(
           {googleId: profile.id},
           (err, userFromDb) => {
