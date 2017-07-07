@@ -26,9 +26,10 @@
     "passport-google": "^0.3.0",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "request": "^2.81.0",
     "requestify": "^0.2.5",
-    "serve-favicon": "~2.3.2"
+    "serve-favicon": "^2.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

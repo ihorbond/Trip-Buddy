@@ -5,43 +5,6 @@ let mapHandler;
 mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${mapKey}&libraries=places&callback=startMap`;
 document.body.appendChild(mapScript);
 
-$('#cars-dropdown').on('change', () => {
-    $("#mpg").val($("#cars-dropdown option:selected").val());
-});
-
-$('#calculate').on('click', () => {
-  // console.log("CURRENT USER: " + user);
-  mapHandler.route();
-});
-
-//currency converter widget
-function reloadFiAdg9Fr1() {
-  var sc = document.getElementById('scFiAdg9Fr1');
-  if (sc) sc.parentNode.removeChild(sc);
-  sc = document.createElement('script');
-  sc.type = 'text/javascript';
-  sc.charset = 'UTF-8';
-  sc.async = true;
-  sc.id = 'scFiAdg9Fr1';
-  sc.src =
-    'https://freecurrencyrates.com/en/widget-horizontal-editable?iso=USDGBPEURUAH&df=2&p=FiAdg9Fr1&v=fts&source=fcr&width=585&width_title=200&firstrowvalue=1&thm=A6C9E2,FCFDFD,4297D7,5C9CCC,FFFFFF,C5DBEC,FCFDFD,2E6E9E,000000&title=Currency%20Converter&tzo=240';
-  var div = document.getElementById('gcw_mainFiAdg9Fr1');
-  div.parentNode.insertBefore(sc, div);
-}
-
-// $.getJSON('http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/&callback=?', data => {
-// 	scrapedData = data.contents;
-//   let begin   = scrapedData.indexOf('<table>');
-//   let end     = scrapedData.indexOf('<div class="row-sm">');
-//   let result  = scrapedData.slice(begin, end);
-//   console.log(result);
-//   $('#gas-prices').append(result);
-// });
-
-// $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://gasprices.aaa.com/') + '&callback=?', data => {
-// 	console.log(data.contents);
-// });
-
 const gasPrices = `<table>
             <thead>
                 <tr>
@@ -96,8 +59,74 @@ $('#gas-prices').append(gasPrices);
 $("#results").css("height", $("#inputs").height()+4);
 reloadFiAdg9Fr1();
 
+$('#cars-dropdown').on('change', () => {
+    $("#mpg").val($("#cars-dropdown option:selected").val());
+});
+
+$('#calculate').on('click', () => {
+  mapHandler.route();
+});
+
+//currency converter widget
+function reloadFiAdg9Fr1() {
+  var sc = document.getElementById('scFiAdg9Fr1');
+  if (sc) sc.parentNode.removeChild(sc);
+  sc = document.createElement('script');
+  sc.type = 'text/javascript';
+  sc.charset = 'UTF-8';
+  sc.async = true;
+  sc.id = 'scFiAdg9Fr1';
+  sc.src =
+    'https://freecurrencyrates.com/en/widget-horizontal-editable?iso=USDGBPEURUAH&df=2&p=FiAdg9Fr1&v=fts&source=fcr&width=585&width_title=200&firstrowvalue=1&thm=A6C9E2,FCFDFD,4297D7,5C9CCC,FFFFFF,C5DBEC,FCFDFD,2E6E9E,000000&title=Currency%20Converter&tzo=240';
+  var div = document.getElementById('gcw_mainFiAdg9Fr1');
+  div.parentNode.insertBefore(sc, div);
+}
+
+// $.getJSON('http://anyorigin.com/go?url=http%3A//gasprices.aaa.com/&callback=?', data => {
+// 	scrapedData = data.contents;
+//   let begin   = scrapedData.indexOf('<table>');
+//   let end     = scrapedData.indexOf('<div class="row-sm">');
+//   let result  = scrapedData.slice(begin, end);
+//   console.log(result);
+//   $('#gas-prices').append(result);
+// });
+
+// $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://gasprices.aaa.com/') + '&callback=?', data => {
+// 	console.log(data.contents);
+// });
+
+// latLng = new google.maps.LatLng(myLocation.lat, myLocation.lng);
+// geocoder.geocode({'latLng': latLng}, (results, status) => {
+//     if (status == google.maps.GeocoderStatus.OK) {
+//       // if the geolocation was recognized and an address was found
+//       if (results[0]) {
+//         console.log("TRIGGERED");
+//          address = results[0].address_components[1].long_name+' '+results[0].address_components[0].long_name+', '+results[0].address_components[3].long_name;
+//          $("#origin-input").val(address);
+//       }
+//     }
+//     else {
+//       window.alert('There was an error getting the address based on your location');
+//     }
+//   });
+//   map = new google.maps.Map(
+//   document.getElementById('map'), {
+//    zoom: 10,
+//    center: myLocation
+//  });
+//  mapHandler = new AutocompleteDirectionsHandler(map);
+//  mapHandler.originInput = $('#origin-input').val();
+// map.setCenter(myLocation);
+// const marker = new google.maps.Marker({
+//   position: myLocation,
+//   map: map,
+//   title: 'You are here'
+// });
+
 function startMap() {
   let myLocation;
+  let address;
+  const geocoder = new google.maps.Geocoder();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       myLocation = {
@@ -110,7 +139,6 @@ function startMap() {
         map: map,
         title: 'You are here'
       });
-
     }, () => {
         map = new google.maps.Map(
         document.getElementById('map'), {
@@ -126,13 +154,12 @@ function startMap() {
   } else {
     window.alert('Your browser does not support geolocation service :/');
   }
-
-     map = new google.maps.Map(
+    map = new google.maps.Map(
     document.getElementById('map'), {
-      zoom: 10,
-      center: myLocation
-    });
-  mapHandler = new AutocompleteDirectionsHandler(map);
+     zoom: 10,
+     center: myLocation
+   });
+       mapHandler = new AutocompleteDirectionsHandler(map);
 }
 
 //this class handles: autocompletion, route drawing, calculation of expenses.
@@ -154,7 +181,9 @@ class AutocompleteDirectionsHandler {
     this.destinationInput       = document.getElementById('destination-input');
     let originAutocomplete      = new google.maps.places.Autocomplete( this.originInput, { placeIdOnly: true });
     let destinationAutocomplete = new google.maps.places.Autocomplete( this.destinationInput, {placeIdOnly: true });
+    console.log("ORIGININPUT: " + this.originInput.value);
 
+    // console.log("ROUTE originPlaceId: "+ this.originPlaceId);
     this.checkPlaceChange(originAutocomplete, 'ORIG');
     this.checkPlaceChange(destinationAutocomplete, 'DEST');
   }
@@ -250,7 +279,7 @@ class AutocompleteDirectionsHandler {
     this.gasPrice   = document.getElementById('gas-price-input').value;
     this.mpg        = document.getElementById('mpg').value;
     this.avoidTolls = document.getElementById('avoid-tolls').checked;
-    if (!this.originPlaceId || !this.destinationPlaceId || !this.mpg || !this.gasPrice) {
+    if (!this.destinationPlaceId || !this.mpg || !this.gasPrice) {
       window.alert ('Make sure to fill out all the fields');
       return;
 }

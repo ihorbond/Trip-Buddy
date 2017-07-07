@@ -1,6 +1,6 @@
 const express      = require('express');
 const path         = require('path');
-// const favicon      = require('serve-favicon');
+const favicon      = require('serve-favicon');
 const logger       = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
@@ -12,7 +12,6 @@ const request      = require('request');
 // const flash        = require('connect-flash');
 
 require('dotenv').config();
-require('jquery');
 require('./config/passport.js');
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -26,8 +25,7 @@ app.set('view engine', 'ejs');
 app.locals.title         = 'Trip Buddy';
 app.locals.googleMapsKey = process.env.MAP_KEY;
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,7 +46,7 @@ app.use((req, res, next) => {
   // res.locals.currentUser = null;
   if (req.user) {
     res.locals.currentUser = req.user;
-    
+
   }
   next();
 });
