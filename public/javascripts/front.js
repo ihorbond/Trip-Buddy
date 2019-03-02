@@ -179,11 +179,12 @@ class AutocompleteDirectionsHandler {
     this.distanceMatrixResponse = null;
     this.originInput            = document.getElementById('origin-input');
     this.destinationInput       = document.getElementById('destination-input');
-    let originAutocomplete      = new google.maps.places.Autocomplete( this.originInput, { placeIdOnly: true });
-    let destinationAutocomplete = new google.maps.places.Autocomplete( this.destinationInput, {placeIdOnly: true });
-    console.log("ORIGININPUT: " + this.originInput.value);
+    this.autocompleteOptions = {
+      fields: ['place_id']
+    };
+    let originAutocomplete      = new google.maps.places.Autocomplete( this.originInput, this.autocompleteOptions);
+    let destinationAutocomplete = new google.maps.places.Autocomplete( this.destinationInput, this.autocompleteOptions);
 
-    // console.log("ROUTE originPlaceId: "+ this.originPlaceId);
     this.checkPlaceChange(originAutocomplete, 'ORIG');
     this.checkPlaceChange(destinationAutocomplete, 'DEST');
   }
@@ -196,13 +197,11 @@ class AutocompleteDirectionsHandler {
         result.push(el);
       }
     });
-    // console.log('RESULTL ' + parseInt(result.join('') ,10));
+
     return parseInt(result.join('') ,10);
   }
 
   calculateExpensesAndDisplayResults() {
-
-    console.log(this.distanceMatrixResponse.rows[0].elements[0].distance.text);
     let distance = this.distanceMatrixResponse.rows[0].elements[0].distance.text;
      //chopping off ' mi' from the end of the string
      distance = distance.slice(0, -3);
@@ -214,7 +213,6 @@ class AutocompleteDirectionsHandler {
      const travelTime    = this.distanceMatrixResponse.rows[0].elements[0].duration.text;
      const amountOfGas   = (distance / mpg).toFixed(2);
      const cost          = (amountOfGas * this.gasPrice).toFixed(2);
-    //  console.log(`${mpg}, ${this.distanceMatrixResponse.rows[0].elements[0].distance.text}, ${this.gasPrice} ${amountOfGas}, ${cost}`);
      $('#results-text').html(`<ul>
                             <li>Traveling from: <span class="result-values">${this.originInput.value}</span> </li>
                             <li>To: <span class="result-values">${this.destinationInput.value}</span></li>
@@ -246,7 +244,6 @@ class AutocompleteDirectionsHandler {
       avoidTolls:    this.avoidTolls
     }, (response, status) => {
       if (status === "OK") {
-        console.log("DISTANCE MATRIX: " + response);
         me.distanceMatrixResponse = response;
         me.calculateExpensesAndDisplayResults();
       }
