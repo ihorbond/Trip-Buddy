@@ -73,8 +73,6 @@ router.get('/new-car', (req, res, next) => {
       (err, userFromDb) => {
         if(err) return void next(err);
 
-      //  console.log('----------------userFromDb--------------');
-       console.log(userFromDb);
        //2nd add new car to his inventory
        if (!newCar.model || !newCar.make || !newCar.mpg) {
         //  console.log("--------EMPTY FILEDS DETECTED");

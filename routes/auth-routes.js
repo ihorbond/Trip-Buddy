@@ -2,18 +2,11 @@ const express   = require('express');
 const router    = express.Router();
 const bcrypt    = require('bcrypt');
 const passport  = require('passport');
-const CarModel  = require('../models/car-model.js');
 const UserModel = require('../models/user-model.js');
 const errorMessages = {
   alreadyExistsMessage: "The username you entered is already in use",
   noInputMessage      : "Please make sure to fill out all the fields"
 };
-// function checkForDbError(err) {
-//   if (err) {
-//     next(err);
-//     return or break anonFunction (block label) or throw new Error ('error message')
-//   }
-// }
 
 //-----------------------RECOVER PASSWORD--------------
 router.get('/recover-password', (req, res, next) => {
@@ -42,14 +35,12 @@ router.get('/signup', (req, res, next) => {
 
 router.post('/signup', (req, res, next) => {
   if (req.body.userName === '' || req.body.password === '' || req.body.securityAnswer === '') {
-    // console.log("------------------------Empty field triggered-------------------------");
   res.render('signup.ejs', {error: errorMessages.noInputMessage});
   return;
   }
   UserModel.findOne(
     {userName: req.body.userName},
     (err, userFromDb) => {
-      console.log("-----------DB Error-----------------");
       if (err) return void next(err);      // check for DB error
       if(userFromDb) {
          res.render('signup.ejs', {error: errorMessages.alreadyExistsMessage});
@@ -65,7 +56,6 @@ router.post('/signup', (req, res, next) => {
       securityAnswer:   req.body.securityAnswer
     });
     newUser.save((err) => {
-      // console.log("----------------------SAVED");
     if (err) return void next(err);
     res.locals.currentUser = req.user;
     res.redirect('/login');
@@ -94,28 +84,28 @@ router.get('/logout', (req, res, next) => {
 });
 
 //-----------------SOCIAL LOGINS--------------------
-router.get('/auth/facebook', passport.authenticate('facebook'));
-router.get('/auth/facebook/callback', passport.authenticate(
-  'facebook',
-   {
-     successRedirect: '/',
-     failureRedirect: '/login'
-   }
-));
+// router.get('/auth/facebook', passport.authenticate('facebook'));
+// router.get('/auth/facebook/callback', passport.authenticate(
+//   'facebook',
+//    {
+//      successRedirect: '/',
+//      failureRedirect: '/login'
+//    }
+// ));
 
-router.get('/auth/google', passport.authenticate(
-  'google',
-  {
-    scope: ["https://www.googleapis.com/auth/plus.login",
-          "https://www.googleapis.com/auth/plus.profile.emails.read"]
-  }
-));
-router.get('/auth/google/callback', passport.authenticate(
-  'google',
-   {
-     successRedirect: '/',
-     failureRedirect: '/login'
-   }
-));
+// router.get('/auth/google', passport.authenticate(
+//   'google',
+//   {
+//     scope: ["https://www.googleapis.com/auth/plus.login",
+//           "https://www.googleapis.com/auth/plus.profile.emails.read"]
+//   }
+// ));
+// router.get('/auth/google/callback', passport.authenticate(
+//   'google',
+//    {
+//      successRedirect: '/',
+//      failureRedirect: '/login'
+//    }
+// ));
 
 module.exports = router;
