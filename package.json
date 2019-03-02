@@ -6,6 +6,10 @@
     "start": "node ./bin/www",
     "trip-buddy": "nodemon ./bin/www"
   },
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=5.0.0"
+  },
   "dependencies": {
     "bcrypt": "^1.0.2",
     "body-parser": "^1.16.1",
